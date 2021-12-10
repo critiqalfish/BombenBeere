@@ -1,1 +1,1 @@
-unfinished and currently under development password manager written in python
+currently under development password manager written in python
