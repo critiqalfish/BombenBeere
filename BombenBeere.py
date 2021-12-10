@@ -189,10 +189,11 @@ def show_password(master_key):
 
             break
     
-    f = open(password_name_file, 'rb')
-
-    #decoded_credentials = decrypt(master_key, encoded)
-    #print(decodedcredentials.decode('utf-8').split('[:::]'))
+    f = open(os.getcwd() + password_name_file, 'rb')
+    encoded_credentials = pickle.load(f)
+    f.close()
+    decoded_credentials = decrypt(master_key.encode('utf-8'), encoded_credentials)
+    print(decoded_credentials.decode('utf-8').split('[:::]'))
 
 def add_password(master_key):
 
@@ -213,7 +214,7 @@ def add_password(master_key):
     credentials = f'{input_password_name}[:::]{input_username_or_email}[:::]{input_password}'
     encoded_credentials = encrypt(master_key.encode('utf-8'), credentials.encode('utf-8'))
 
-    f = open(f'{input_password_name}.pckl', 'wb')
+    f = open(f'passwords/{input_password_name}.pckl', 'wb')
     pickle.dump(encoded_credentials, f)
     f.close()
 
