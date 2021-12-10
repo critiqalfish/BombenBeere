@@ -3,6 +3,7 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto import Random
+import sys
 import hashlib
 import pickle
 from termcolor import colored
@@ -13,7 +14,7 @@ import shutil
 def menu(master_key=''):
 
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
+    print(colored('\n-------------------------\nBombenBeere.py v0.2 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
 
     global master_password
 
@@ -76,13 +77,15 @@ def menu(master_key=''):
         elif choice == 2:
 
             show_password(master_password)
-            print(colored('[!] EXITED: by user\n', 'yellow'))
+            print(colored('\n[!] EXITED: by user\n', 'yellow'))
             input('')
             break
 
         elif choice == 3:
 
             save_password(master_password)
+            print(colored('\n[!] SUCCESS: password saved successfully!', 'yellow'))
+            input('')
             break
 
         elif choice == 4:
@@ -101,13 +104,13 @@ def menu(master_key=''):
 
             print(colored('\n[!] EXITED: by user', 'yellow'))
             input('')
-            exit()
+            break
 
         elif choice != 1 or choice != 2 or choice != 3 or choice != 4 or choice != 5 or choice != 6:
 
             print(colored('\n[!] ERROR: choice does not exist\n', 'yellow'))
 
-    exit()
+    sys.exit()
 
 def encrypt(key, source, encode=True):
 
@@ -205,11 +208,10 @@ def create_master_password():
 def list_passwords():
 
     all_password_files = [x for x in os.listdir(os.getcwd() + '\\passwords') if x.endswith(".pckl")]
-    print('')
 
     for file in all_password_files:
 
-        print(colored('[:] ', 'cyan') + colored('password name: ', 'red') + colored(file.removesuffix('.pckl'), 'magenta'))
+        print(colored('\n[:] ', 'cyan') + colored('password name: ', 'red') + colored(file.removesuffix('.pckl'), 'magenta'))
 
 def show_password(master_key):
 
@@ -258,10 +260,6 @@ def save_password(master_key):
     pickle.dump(encoded_credentials, f)
     f.close()
 
-    print(colored('\n[!] SUCCESS: password saved successfully!', 'yellow'))
-    input('')
-    exit()
-
 def delete_password(master_key):
 
     while True:
@@ -298,8 +296,6 @@ def delete_password(master_key):
                     pass
 
             break
-            
-    exit()
 
 def erase_everything():
 
@@ -349,7 +345,7 @@ def erase_everything():
 
 if __name__ == '__main__':
 
-    #print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
+    #print(colored('\n-------------------------\nBombenBeere.py v0.2 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
 
     try:
 
