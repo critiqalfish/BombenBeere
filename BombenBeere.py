@@ -14,21 +14,30 @@ def menu(master_key=''):
     global master_password
 
     if master_key != '':
+
         f = open('passwords/master-password/master-password.pckl', 'rb')
+
         if hashlib.sha3_512(master_key.encode('utf-8')).hexdigest() == pickle.load(f):
+
             f.close()
             pass
+
         else:
+
             print(colored('[!] ERROR: an unknown password occured', 'yellow'))
     
     elif master_key == '':
+
         try:
+
             open('passwords/master-password/master-password.pckl', 'rb').close()
 
         except FileNotFoundError:
+
             create_master_password()
 
         else:
+
             master_password = login_master_password()
 
     print(colored('\nwhat do you want to do?\n', 'red'))
@@ -56,21 +65,33 @@ def menu(master_key=''):
             print(colored('\n[!] ERROR: choice does not exist', 'yellow'))
 
     if choice == 1:
+
         try:
+            
             show_password(master_password)
+
         except:
+
             print(colored('[!] ERROR: an unknown error occured', 'yellow'))
 
     if choice == 2:
+
         try:
+
             add_password(master_password)
+
         except:
+
             print(colored('[!] ERROR: an unknown error occured', 'yellow'))
 
     if choice == 3:
+
         try:
+
             delete_password(master_password)
+
         except:
+
             print(colored('[!] ERROR: an unknown error occured', 'yellow'))
 
     if choice == 4:
@@ -131,9 +152,13 @@ def login_master_password():
         f = open('passwords/master-password/master-password.pckl', 'rb')
         saved_master_password = pickle.load(f)
         f.close()
+
         if hash_master_password == saved_master_password:
+
             break
+
         else:
+
             print(colored('\n[!] ERROR: wrong master-password', 'yellow'))
     
     return input_master_password
@@ -145,7 +170,7 @@ def create_master_password():
     print(colored('[!] IMPORTANT: Please choose a master-password that has at least one uppercase letter, one lowercase letter, one number, one special character and a length of 10!\n', 'yellow'))
 
     reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$"
-    pat = re.compile(reg)             
+    pat = re.compile(reg)
 
     while True:
 
@@ -195,6 +220,7 @@ def erase_everything():
 
             input_master_password = getpass(colored('\n[?] ', 'cyan') + colored('confirm with your master-password: ', 'red'))
             f = open('passwords/master-password/master-password.pckl', 'rb')
+
             if hashlib.sha3_512(input_master_password.encode('utf-8')).hexdigest() == pickle.load(f):
 
                 f.close()
@@ -209,6 +235,7 @@ def erase_everything():
                     pass
 
                 current_dir = os.getcwd() + '\\passwords'
+                
                 for f in os.listdir(current_dir):
 
                     if not f.endswith(".pckl"):
