@@ -145,6 +145,16 @@ def login_master_password():
 
 def create_master_password():
 
+    cwd = os.getcwd()
+
+    if not os.path.exists(cwd + '\\passwords'):
+
+        os.makedirs(cwd + '\\passwords')
+
+    if not os.path.exists(cwd + '\\passwords\\master-password'):
+        
+        os.makedirs(cwd + '\\passwords\\master-password')
+
     print(colored('\n[!] IMPORTANT: First, please create your master-password!', 'yellow'))
     print(colored('[!] IMPORTANT: Never loose your master-password, your saved passwords won\'t be recoverable without it!', 'yellow'))
     print(colored('[!] IMPORTANT: Please choose a master-password that has at least one uppercase letter, one lowercase letter, one number, one special character and a length of 10!\n', 'yellow'))
