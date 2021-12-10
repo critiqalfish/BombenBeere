@@ -66,46 +66,28 @@ def menu(master_key=''):
 
     if choice == 1:
 
-        try:
-            
-            show_password(master_password)
+        show_password(master_password)
 
-        except:
+    elif choice == 2:
 
-            print(colored('[!] ERROR: an unknown error occured', 'yellow'))
+        add_password(master_password)
 
-    if choice == 2:
+    elif choice == 3:
 
-        try:
+        delete_password(master_password)
 
-            add_password(master_password)
-
-        except:
-
-            print(colored('[!] ERROR: an unknown error occured', 'yellow'))
-
-    if choice == 3:
-
-        try:
-
-            delete_password(master_password)
-
-        except:
-
-            print(colored('[!] ERROR: an unknown error occured', 'yellow'))
-
-    if choice == 4:
+    elif choice == 4:
 
         erase_everything()
         print(colored('\n[!] EXITED: deleted all passwords including the master-password\n', 'yellow'))
         exit()
 
-    if choice == 5:
+    elif choice == 5:
 
         print(colored('\n[!] EXITED: by user\n', 'yellow'))
         exit()
 
-    if choice != 1 or choice != 2 or choice != 3 or choice != 4 or choice != 5:
+    elif choice != 1 or choice != 2 or choice != 3 or choice != 4 or choice != 5:
 
         print(colored('\n[!] ERROR: choice does not exist\n', 'yellow'))
         exit()
@@ -194,15 +176,15 @@ def create_master_password():
 
     menu()
 
-def show_password():
+def show_password(master_key):
 
     pass
 
-def add_password():
+def add_password(master_key):
 
     pass
 
-def delete_password():
+def delete_password(master_key):
 
     pass
 
@@ -235,7 +217,7 @@ def erase_everything():
                     pass
 
                 current_dir = os.getcwd() + '\\passwords'
-                
+
                 for f in os.listdir(current_dir):
 
                     if not f.endswith(".pckl"):
