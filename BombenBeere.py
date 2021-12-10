@@ -13,7 +13,7 @@ import shutil
 def menu(master_key=''):
 
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
+    print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
 
     global master_password
 
@@ -349,7 +349,7 @@ def erase_everything():
 
 if __name__ == '__main__':
 
-    #print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n-------------------------', 'red', attrs=['bold']))
+    #print(colored('\n-------------------------\nBombenBeere.py v0.1 beta\n\nby critiqalfish\n-------------------------\n\ntip: you can exit anytime by pressing \'CTRL\' + \'C\'', 'red', attrs=['bold']))
 
     try:
 
