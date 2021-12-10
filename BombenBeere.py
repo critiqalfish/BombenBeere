@@ -8,8 +8,12 @@ import pickle
 from termcolor import colored
 import re
 from getpass import getpass
+import shutil
 
 def menu(master_key=''):
+
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(colored('\n--------------------\nBombenBeere.py v0.1\n--------------------', 'red', attrs=['bold']))
 
     global master_password
 
@@ -40,17 +44,13 @@ def menu(master_key=''):
 
             master_password = login_master_password()
 
-    print(colored('\nwhat do you want to do?\n', 'red'))
-    print(colored('[1]', 'cyan'), end=' ')
-    print(colored('lookup a password', 'magenta'))
-    print(colored('[2]', 'cyan'), end=' ')
-    print(colored('add a password', 'magenta'))
-    print(colored('[3]', 'cyan'), end=' ')
-    print(colored('delete a password', 'magenta'))
-    print(colored('[4]', 'cyan'), end=' ')
-    print(colored('erase everything', 'magenta'))
-    print(colored('[5]', 'cyan'), end=' ')
-    print(colored('exit program', 'magenta'))
+    print(colored('\n[>] ', 'cyan') + colored('what do you want to do?\n', 'red'))
+    print(colored('[1] ', 'cyan') + colored('list all saved passwords', 'magenta'))
+    print(colored('[2] ', 'cyan') + colored('lookup a password', 'magenta'))
+    print(colored('[3] ', 'cyan') + colored('add a password', 'magenta'))
+    print(colored('[4] ', 'cyan') + colored('delete a password', 'magenta'))
+    print(colored('[5] ', 'cyan') + colored('erase everything', 'magenta'))
+    print(colored('[6] ', 'cyan') + colored('exit program', 'magenta'))
 
     while True:
 
@@ -64,33 +64,44 @@ def menu(master_key=''):
 
             print(colored('\n[!] ERROR: choice does not exist', 'yellow'))
 
-    if choice == 1:
+    while True:
 
-        show_password(master_password)
+        if choice == 1:
 
-    elif choice == 2:
+            list_passwords(master_password)
+            break
 
-        add_password(master_password)
+        elif choice == 2:
 
-    elif choice == 3:
+            show_password(master_password)
+            break
 
-        delete_password(master_password)
+        elif choice == 3:
 
-    elif choice == 4:
+            add_password(master_password)
+            break
 
-        erase_everything()
-        print(colored('\n[!] EXITED: deleted all passwords including the master-password\n', 'yellow'))
-        exit()
+        elif choice == 4:
 
-    elif choice == 5:
+            delete_password(master_password)
+            break
 
-        print(colored('\n[!] EXITED: by user\n', 'yellow'))
-        exit()
+        elif choice == 5:
 
-    elif choice != 1 or choice != 2 or choice != 3 or choice != 4 or choice != 5:
+            erase_everything()
+            print(colored('\n[!] EXITED: deleted all passwords including the master-password', 'yellow'))
+            input('')
+            exit()
 
-        print(colored('\n[!] ERROR: choice does not exist\n', 'yellow'))
-        exit()
+        elif choice == 6:
+
+            print(colored('\n[!] EXITED: by user', 'yellow'))
+            input('')
+            exit()
+
+        elif choice != 1 or choice != 2 or choice != 3 or choice != 4 or choice != 5 or choice != 6:
+
+            print(colored('\n[!] ERROR: choice does not exist\n', 'yellow'))
 
 def encrypt(key, source, encode=True):
 
@@ -182,7 +193,12 @@ def create_master_password():
             print(colored('[!] CRTIERIA 2: at least one number (1234567890)', 'yellow'))
             print(colored('[!] CRTIERIA 3: at least one special character (@$!%*#?&)\n', 'yellow'))
 
+    os.system('cls' if os.name=='nt' else 'clear')
     menu()
+
+def list_passwords(master_key):
+
+    pass
 
 def show_password(master_key):
 
@@ -202,8 +218,14 @@ def show_password(master_key):
     f = open(os.getcwd() + password_name_file, 'rb')
     encoded_credentials = pickle.load(f)
     f.close()
-    decoded_credentials = decrypt(master_key.encode('utf-8'), encoded_credentials)
-    print(decoded_credentials.decode('utf-8').split('[:::]'))
+
+    decoded_credentials = decrypt(master_key.encode('utf-8'), encoded_credentials).decode('utf-8').split('[:::]')
+    print(colored('\n[:] ', 'cyan') + colored('password name: ', 'red') + colored(decoded_credentials[0], 'magenta'))
+    print(colored('[:] ', 'cyan') + colored('username or email: ', 'red') + colored(decoded_credentials[1], 'magenta'))
+    print(colored('[:] ', 'cyan') + colored('password: ', 'red') + colored(decoded_credentials[2], 'magenta'))
+
+    input('')
+    print(colored('[!] EXITED: by user\n', 'yellow'))
 
 def add_password(master_key):
 
@@ -228,11 +250,24 @@ def add_password(master_key):
     pickle.dump(encoded_credentials, f)
     f.close()
 
-    print(colored('\n[!] SUCCESS: password saved successfully!\n', 'yellow'))
+    print(colored('\n[!] SUCCESS: password saved successfully!', 'yellow'))
+    input('')
+    exit()
 
 def delete_password(master_key):
 
-    pass
+    while True:
+
+        input_password_name = input(colored('\n[?] ', 'cyan') + colored('name of the saved password you want to delete: ', 'red'))
+        password_name_file = f'\\passwords\\{input_password_name}.pckl'
+
+        if os.path.isfile(os.getcwd() + password_name_file) == False:
+
+            print(colored('\n[!] ERROR: there is no password saved with that name!', 'yellow'))
+
+        else:
+
+            os.remove(os.getcwd() + password_name_file)
 
 def erase_everything():
 
@@ -240,6 +275,7 @@ def erase_everything():
 
     if confirm == 'n' or confirm == 'N' or confirm == 'no' or confirm == 'No':
 
+        os.system('cls' if os.name == 'nt' else 'clear')
         menu(master_key=master_password)
     
     if confirm == 'y' or confirm == 'Y' or confirm == 'yes' or confirm == 'Yes':
@@ -255,41 +291,28 @@ def erase_everything():
 
                 try:
                     
-                    mpw_dir = os.getcwd() + '\\passwords\\master-password\\master-password.pckl'
-                    os.remove(mpw_dir)
+                    shutil.rmtree(os.getcwd() + '\\passwords', True)
 
-                except:
+                except FileNotFoundError:
 
-                    pass
-
-                current_dir = os.getcwd() + '\\passwords'
-
-                for f in os.listdir(current_dir):
-
-                    if not f.endswith(".pckl"):
-
-                        continue
-
-                    os.remove(os.path.join(current_dir, f))
+                    print(colored('\n[!] there is nothing to delete!', 'yellow'))
             
-                break
+                else:
+
+                    break
 
             else:
 
-                pass
-        
-'''
-key = b'key'
-
-file = open('data/var.pckl', 'rb')
-data = pickle.load(file)
-file.close()
-
-print('encrypted: ' + data)
-print('decrypted: ' + decrypt(key, data).decode('utf-8'))
-'''
+                print(colored('\n[!] ERROR: wrong master-password!', 'yellow'))
 
 if __name__ == '__main__':
 
-    print(colored('\n--------------------\nBombenBeere.py v0.1\n--------------------', 'red', attrs=['bold']))
-    menu()
+    #print(colored('\n--------------------\nBombenBeere.py v0.1\n--------------------', 'red', attrs=['bold']))
+
+    try:
+
+        menu()
+
+    except KeyboardInterrupt:
+
+        print(colored('\n\n[!] EXITED: by user\n', 'yellow'))
