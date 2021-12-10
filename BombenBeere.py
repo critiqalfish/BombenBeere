@@ -24,7 +24,7 @@ def menu(master_key=''):
 
         else:
 
-            print(colored('[!] ERROR: an unknown password occured', 'yellow'))
+            print(colored('[!] ERROR: an unknown error occured', 'yellow'))
     
     elif master_key == '':
 
@@ -102,17 +102,15 @@ def encrypt(key, source, encode=True):
     padding = AES.block_size - len(source) % AES.block_size
     source += bytes([padding]) * padding
     data = IV + encryptor.encrypt(source)
-    print(IV)
-    print(padding)
 
-    return base64.b64encode(data).decode("latin-1") if encode else data
+    return base64.b64encode(data).decode("utf-8") if encode else data
 
 def decrypt(key, source, decode=True):
 
     # this function was made by @zwer on stack overflow
 
     if decode:
-        source = base64.b64decode(source.encode("latin-1"))
+        source = base64.b64decode(source.encode("utf-8"))
     key = SHA256.new(key).digest()
     IV = source[:AES.block_size]
     decryptor = AES.new(key, AES.MODE_CBC, IV)
@@ -178,11 +176,48 @@ def create_master_password():
 
 def show_password(master_key):
 
-    pass
+    while True:
+
+        input_password_name = input(colored('\n[?] ', 'cyan') + colored('name of the saved password you want to see: ', 'red'))
+        password_name_file = f'\\passwords\\{input_password_name}.pckl'
+
+        if os.path.isfile(os.getcwd() + password_name_file) == False:
+
+            print(colored('\n[!] ERROR: there is no password saved with that name!', 'yellow'))
+
+        else:
+
+            break
+    
+    f = open(password_name_file, 'rb')
+
+    #decoded_credentials = decrypt(master_key, encoded)
+    #print(decodedcredentials.decode('utf-8').split('[:::]'))
 
 def add_password(master_key):
 
-    pass
+    while True:
+
+        input_password_name = input(colored('\n[?] ', 'cyan') + colored('password name: ', 'red'))
+
+        if os.path.isfile(os.getcwd() + f'\\passwords\\{input_password_name}.pckl') == True:
+
+            print(colored('\n[!] ERROR: you already saved a password with this name!', 'yellow'))
+
+        else:
+
+            break
+
+    input_username_or_email = input(colored('[?] ', 'cyan') + colored('username or email: ', 'red'))
+    input_password = getpass(colored('[?] ', 'cyan') + colored('password: ', 'red'))
+    credentials = f'{input_password_name}[:::]{input_username_or_email}[:::]{input_password}'
+    encoded_credentials = encrypt(master_key.encode('utf-8'), credentials.encode('utf-8'))
+
+    f = open(f'{input_password_name}.pckl', 'wb')
+    pickle.dump(encoded_credentials, f)
+    f.close()
+
+    print(colored('\n[!] SUCCESS: password saved successfully!\n', 'yellow'))
 
 def delete_password(master_key):
 
@@ -190,7 +225,7 @@ def delete_password(master_key):
 
 def erase_everything():
 
-    confirm = input(colored('\n[?] ', 'cyan') + colored('do you really want to erase everything (y/n): ', 'red'))
+    confirm = input(colored('\n[?] ', 'cyan') + colored('do you really want to erase everything? (y/n): ', 'red'))
 
     if confirm == 'n' or confirm == 'N' or confirm == 'no' or confirm == 'No':
 
@@ -240,7 +275,7 @@ data = pickle.load(file)
 file.close()
 
 print('encrypted: ' + data)
-print('decrypted: ' + decrypt(key, data).decode('latin-1'))
+print('decrypted: ' + decrypt(key, data).decode('utf-8'))
 '''
 
 if __name__ == '__main__':
